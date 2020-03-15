@@ -8,7 +8,7 @@ environment:
   APPVEYOR_YML_DISABLE_PS_LINUX: true
   VCPKG_DEFAULT_TRIPLET: x64-windows-static
   VCPKG_TARGET_TRIPLET: x64-windows-static
-  CMAKE_TOOLCHAIN_FILE: C:\Tools\vcpkg\scripts\buildsystems\vcpkg.cmake
+  CMAKE_TOOLCHAIN_FILE: "C:\Tools\vcpkg\scripts\buildsystems\vcpkg.cmake"
 
 configuration:
   - Debug
@@ -22,7 +22,7 @@ for:
     environment:
       VCPKG_DEFAULT_TRIPLET: x64-linux
       VCPKG_TARGET_TRIPLET: x64-linux
-      CMAKE_TOOLCHAIN_FILE: %APPVEYOR_BUILD_FOLDER%/vcpkg/scripts/buildsystems/vcpkg.cmake
+      CMAKE_TOOLCHAIN_FILE: "%APPVEYOR_BUILD_FOLDER%/vcpkg/scripts/buildsystems/vcpkg.cmake"
 
 install:
   # Windows
