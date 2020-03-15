@@ -39,5 +39,5 @@ build_script:
   - mkdir build
 
   - ps: cd build
-  - ps: cmake -DCMAKE_BUILD_TYPE=$env:configuration% -DCMAKE_TOOLCHAIN_FILE=$env:CMAKE_TOOLCHAIN_FILE% -DVCPKG_TARGET_TRIPLET=$env:VCPKG_TARGET_TRIPLET% ..
+  - ps: cmake -DCMAKE_BUILD_TYPE=$env:configuration -DCMAKE_TOOLCHAIN_FILE=$env:CMAKE_TOOLCHAIN_FILE -DVCPKG_TARGET_TRIPLET=$env:VCPKG_TARGET_TRIPLET ..
   - ps: cmake --build . --target all
