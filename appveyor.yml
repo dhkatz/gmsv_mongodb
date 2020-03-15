@@ -1,0 +1,37 @@
+platform: x64
+
+image:
+  - Visual Studio 2019
+  - Ubuntu
+
+environment:
+  APPVEYOR_YML_DISABLE_PS_LINUX: true
+  VCPKG_DEFAULT_TRIPLET: x64-windows-static
+  VCPKG_TARGET_TRIPLET: x64-windows-static
+
+for:
+  -
+    matrix:
+      only:
+        - image: Ubuntu
+    environment:
+      VCPKG_DEFAULT_TRIPLET: x64-linux
+      VCPKG_TARGET_TRIPLET: x64-linux
+
+install:
+  # Windows
+  - ps: cd C:\tools\vcpkg
+  - ps: git pull
+  - ps: .\bootstrap-vcpkg.bat
+
+  # Linux
+  - sh: git clone https://github.com/Microsoft/vcpkg.git
+  - sh: cd vcpkg
+  - sh: ./bootstrap-vcpkg.sh
+
+  - vcpkg remove --outdated --recurse
+  - vcpkg install mongo-c-driver
+  - vcpkg integrate install
+
+build_script:
+  - cmd: mkdir build && cd build
