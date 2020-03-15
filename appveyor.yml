@@ -5,7 +5,6 @@ image:
   - Ubuntu
 
 environment:
-  APPVEYOR_YML_DISABLE_PS_LINUX: true
   VCPKG_DEFAULT_TRIPLET: x64-windows-static
   VCPKG_TARGET_TRIPLET: x64-windows-static
   CMAKE_TOOLCHAIN_FILE: C:\Tools\vcpkg\scripts\buildsystems\vcpkg.cmake
@@ -25,11 +24,6 @@ for:
       CMAKE_TOOLCHAIN_FILE: "%APPVEYOR_BUILD_FOLDER%/vcpkg/scripts/buildsystems/vcpkg.cmake"
 
 install:
-  # Windows
-  - ps: cd C:\tools\vcpkg
-  - ps: git pull
-  - ps: .\bootstrap-vcpkg.bat
-
   # Linux
   - sh: git clone https://github.com/Microsoft/vcpkg.git
   - sh: cd vcpkg
@@ -39,10 +33,10 @@ install:
   - vcpkg install mongo-c-driver
   - vcpkg integrate install
 
-  - cd "%APPVEYOR_BUILD_FOLDER%"
+  - cd $(APPVEYOR_BUILD_FOLDER)
 
 build_script:
-  - cmd: mkdir build && cd build
+  - mkdir build && cd build
 
   - cmake -DCMAKE_BUILD_TYPE=%configuration% -DCMAKE_TOOLCHAIN_FILE=%CMAKE_TOOLCHAIN_FILE% -DVCPKG_TARGET_TRIPLET=%VCPKG_TARGET_TRIPLET% ..
   - cmake --build . --target all
