@@ -33,10 +33,11 @@ install:
   - vcpkg install mongo-c-driver
   - vcpkg integrate install
 
-  - cd $(APPVEYOR_BUILD_FOLDER)
+  - ps: cd $env:APPVEYOR_BUILD_FOLDER
 
 build_script:
-  - mkdir build && cd build
+  - mkdir build
 
-  - cmake -DCMAKE_BUILD_TYPE=%configuration% -DCMAKE_TOOLCHAIN_FILE=%CMAKE_TOOLCHAIN_FILE% -DVCPKG_TARGET_TRIPLET=%VCPKG_TARGET_TRIPLET% ..
-  - cmake --build . --target all
+  - ps: cd build
+  - ps: cmake -DCMAKE_BUILD_TYPE=$env:configuration% -DCMAKE_TOOLCHAIN_FILE=$env:CMAKE_TOOLCHAIN_FILE% -DVCPKG_TARGET_TRIPLET=$env:VCPKG_TARGET_TRIPLET% ..
+  - ps: cmake --build . --target all
