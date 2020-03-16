@@ -25,6 +25,17 @@ build_script:
 
   - cmake -DCMAKE_BUILD_TYPE=%configuration% -DCMAKE_TOOLCHAIN_FILE=%CMAKE_TOOLCHAIN_FILE% -DVCPKG_TARGET_TRIPLET=%VCPKG_TARGET_TRIPLET% ..
   - cmake --build . --target ALL_BUILD --config %configuration%
+  - cd %APPVEYOR_BUILD_FOLDER%
 
 cache:
   - C:\Tools\vcpkg\installed\ -> .appveyor.yml
+
+deploy:
+  provider: GitHub
+  auth_token:
+    secure: "6ANSF4rQ1yS9HzPb7K7lA4IjP6NqWf2XPIPnp/SuYGIe61D9Ur9fIAaGQxwWbhWw"
+  artifact: build\**\*.dll
+  draft: true
+  on:
+    APPVEYOR_REPO_TAG: true
+

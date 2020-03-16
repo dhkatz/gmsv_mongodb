@@ -1,5 +1,9 @@
 # gmsv_mongodb
 
+| Windows | Linux |
+|---------|-------|
+| [![Build status](https://ci.appveyor.com/api/projects/status/8ervbutov5w0144n/branch/development?svg=true)](https://ci.appveyor.com/project/dhkatz/gmsv-mongodb/branch/development)| [![Build Status](https://travis-ci.org/dhkatz/gmsv_mongodb.svg?branch=development)](https://travis-ci.org/dhkatz/gmsv_mongodb) |
+
 ## Installing
 
 To install this module, you can either build it from source or grab a pre-built
