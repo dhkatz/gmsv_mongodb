@@ -1,0 +1,36 @@
+language: cpp
+
+env:
+  - CONFIG=Debug
+  - CONFIG=Release
+
+  global:
+    - VCPKG_DEFAULT_TRIPLET=x64-linux
+    - VCPKG_TARGET_TRIPLET=x64-linux
+
+install:
+  - mkdir -p ${HOME}/vcpkg
+  - |
+    set -e
+    pushd ${HOME}/vcpkg
+    git init
+    git remote add origin https://github.com/Microsoft/vcpkg.git
+    git fetch origin master
+    git checkout -b master origin/master
+    ./bootstrap-vcpkg.sh
+    echo -e '\nset(VCPKG_BUILD_TYPE release)' >> ./triplets/${VCPKG_TRIPLET}.cmake
+    ./vcpkg install mongo-c-driver
+    ./vcpkg integrate install
+    popd
+
+script:
+  - set -e
+  - mkdir -p build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=${CONFIG} -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE} -DVCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET} ..
+  - make -j
+  - cd ..
+
+cache:
+  directories:
+    - ${HOME}/vcpkg/installed

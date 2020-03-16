@@ -2,7 +2,6 @@ platform: x64
 
 image:
   - Visual Studio 2019
-  - Ubuntu
 
 environment:
   VCPKG_DEFAULT_TRIPLET: x64-windows-static
@@ -13,32 +12,19 @@ configuration:
   - Debug
   - Release
 
-for:
-  -
-    matrix:
-      only:
-        - image: Ubuntu
-    environment:
-      VCPKG_DEFAULT_TRIPLET: x64-linux
-      VCPKG_TARGET_TRIPLET: x64-linux
-      CMAKE_TOOLCHAIN_FILE: "%APPVEYOR_BUILD_FOLDER%/vcpkg/scripts/buildsystems/vcpkg.cmake"
-
 install:
-  # Linux
-  - sh: git clone https://github.com/Microsoft/vcpkg.git
-  - sh: cd vcpkg
-  - sh: ./bootstrap-vcpkg.sh
-
   - vcpkg remove --outdated --recurse
   - vcpkg install mongo-c-driver
   - vcpkg integrate install
 
-  - ps: cd $env:APPVEYOR_BUILD_FOLDER
+  - cd %APPVEYOR_BUILD_FOLDER%
 
 build_script:
   - mkdir build
+  - cd build
 
-  - ps: cd build
-  - ps: (gci env:)
-  - ps: cmake -DCMAKE_BUILD_TYPE=$env:configuration -DCMAKE_TOOLCHAIN_FILE=$env:CMAKE_TOOLCHAIN_FILE -DVCPKG_TARGET_TRIPLET=$env:VCPKG_TARGET_TRIPLET ..
-  - ps: cmake --build . --target all
+  - cmake -DCMAKE_BUILD_TYPE=%configuration% -DCMAKE_TOOLCHAIN_FILE=%CMAKE_TOOLCHAIN_FILE% -DVCPKG_TARGET_TRIPLET=%VCPKG_TARGET_TRIPLET% ..
+  - cmake --build . --target all --config %configuration%
+
+cache:
+  - C:\Tools\vcpkg\scripts\installed\
