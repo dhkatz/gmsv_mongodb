@@ -1,12 +1,8 @@
 language: cpp
 
 env:
-  - CONFIG=Debug
-  - CONFIG=Release
-
-  global:
-    - VCPKG_DEFAULT_TRIPLET=x64-linux
-    - VCPKG_TARGET_TRIPLET=x64-linux
+  - CONFIG=Debug VCPKG_DEFAULT_TRIPLET=x64-linux VCPKG_TARGET_TRIPLET=x64-linux
+  - CONFIG=Release VCPKG_DEFAULT_TRIPLET=x64-linux VCPKG_TARGET_TRIPLET=x64-linux
 
 install:
   - mkdir -p ${HOME}/vcpkg

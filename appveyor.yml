@@ -24,7 +24,7 @@ build_script:
   - cd build
 
   - cmake -DCMAKE_BUILD_TYPE=%configuration% -DCMAKE_TOOLCHAIN_FILE=%CMAKE_TOOLCHAIN_FILE% -DVCPKG_TARGET_TRIPLET=%VCPKG_TARGET_TRIPLET% ..
-  - cmake --build . --target all --config %configuration%
+  - cmake --build . --target ALL_BUILD --config %configuration%
 
 cache:
-  - C:\Tools\vcpkg\scripts\installed\
+  - C:\Tools\vcpkg\scripts\installed\ -> .appveyor.yml
