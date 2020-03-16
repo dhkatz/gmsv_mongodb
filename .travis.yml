@@ -1,9 +1,8 @@
 language: cpp
 
 env:
-  global: 
-    - CONFIG=Debug VCPKG_DEFAULT_TRIPLET=x64-linux VCPKG_TARGET_TRIPLET=x64-linux
-    - CONFIG=Release VCPKG_DEFAULT_TRIPLET=x64-linux VCPKG_TARGET_TRIPLET=x64-linux
+  - CONFIG=Debug VCPKG_DEFAULT_TRIPLET=x64-linux VCPKG_TARGET_TRIPLET=x64-linux CC_COMPILER=gcc-8 CXX_COMPILER=g++-8
+  - CONFIG=Release VCPKG_DEFAULT_TRIPLET=x64-linux VCPKG_TARGET_TRIPLET=x64-linux CC_COMPILER=gcc-8 CXX_COMPILER=g++-8
 
 matrix:
   include:
@@ -16,8 +15,7 @@ matrix:
           packages:
             - g++-8
       compiler: gcc
-      env:
-        - CC_COMPILER=gcc-8 CXX_COMPILER=g++-8
+
 
 install:
   - mkdir -p ${HOME}/vcpkg
