@@ -1,25 +1,37 @@
 # gmsv_mongodb
 
+A MongoDB module for Garry's Mod!
+
 | Windows | Linux |
 |---------|-------|
 | [![Build status](https://ci.appveyor.com/api/projects/status/8ervbutov5w0144n/branch/development?svg=true)](https://ci.appveyor.com/project/dhkatz/gmsv-mongodb/branch/development)| [![Build Status](https://travis-ci.org/dhkatz/gmsv_mongodb.svg?branch=development)](https://travis-ci.org/dhkatz/gmsv_mongodb) |
 
-## Installing
+## Quickstart
 
-To install this module, you can either build it from source or grab a pre-built
-binary from the "Releases" section.
+Download a pre-built binary for your system from the **Releases** section.
 
-Place the built/downloaded `.dll` in `garrysmod/lua/bin`.
+Place the `.dll` in `garrysmod/lua/bin`.
 
-## Building
+## Usage
 
-`gmsv_mongodb` requires the MongoDB C driver.
+For more details see the [documentation](docs/README.md).
 
-I recommend using [vcpkg](https://github.com/microsoft/vcpkg) for installing these
-packages as it streamlines the process.
+```lua
+require('mongodb')
 
-These packages can be installed using `vcpkg install mongo-c-driver`.
+-- Note: Connecting to the MongoDB cluster can hang! Cache the result in a global!
+client = client or mongodb('<CONNECTION_URI>', '<APP_NAME>')
 
-If you are on windows, ensure your default and target triplet are set to static (`x64-windows-static`).
+local database = client:Database('test')
 
+local players = database:GetCollection('players')
 
+local data = players:Find({ name = 'Bob' })
+
+print(data[0].name)
+
+```
+
+## License
+
+Code licensed under the [MIT License](LICENSE).

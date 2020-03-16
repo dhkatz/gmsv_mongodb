@@ -69,3 +69,4 @@ deploy:
   draft: true
   on:
     tags: true
+    condition: $CONFIG = Release

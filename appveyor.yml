@@ -42,4 +42,5 @@ deploy:
   draft: true
   on:
     APPVEYOR_REPO_TAG: true
+    CONFIGURATION: Release
 
