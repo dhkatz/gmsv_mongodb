@@ -1,19 +1,27 @@
 language: cpp
 
 env:
-  - MATRIX_EVAL="CC=gcc-8 CXX=g++-8" CONFIG=Release VCPKG_DEFAULT_TRIPLET=x64-linux VCPKG_TARGET_TRIPLET=x64-linux
-  - MATRIX_EVAL="CC=gcc-8 CXX=g++-8" CONFIG=Debug VCPKG_DEFAULT_TRIPLET=x64-linux VCPKG_TARGET_TRIPLET=x64-linux
+  global:
+    - MATRIX_EVAL="CC=gcc-8 CXX=g++-8"
+    - VCPKG_DEFAULT_TRIPLET=x64-linux
+    - VCPKG_TARGET_TRIPLET=x64-linux
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-8
+
+dist: xenial
 
 matrix:
   include:
     - os: linux
-      dist: xenial
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-8
+      env: CONFIG=Debug
+    - os: linux
+      env: CONFIG=Release
+
 
 before_install:
   - eval "${MATRIX_EVAL}"
