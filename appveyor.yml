@@ -27,4 +27,4 @@ build_script:
   - cmake --build . --target ALL_BUILD --config %configuration%
 
 cache:
-  - C:\Tools\vcpkg\scripts\installed\ -> .appveyor.yml
+  - C:\Tools\vcpkg\installed\ -> .appveyor.yml
