@@ -1,8 +1,9 @@
 language: cpp
 
 env:
-  - CONFIG=Debug VCPKG_DEFAULT_TRIPLET=x64-linux VCPKG_TARGET_TRIPLET=x64-linux
-  - CONFIG=Release VCPKG_DEFAULT_TRIPLET=x64-linux VCPKG_TARGET_TRIPLET=x64-linux
+  global: 
+    - CONFIG=Debug VCPKG_DEFAULT_TRIPLET=x64-linux VCPKG_TARGET_TRIPLET=x64-linux
+    - CONFIG=Release VCPKG_DEFAULT_TRIPLET=x64-linux VCPKG_TARGET_TRIPLET=x64-linux
 
 matrix:
   include:
