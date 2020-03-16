@@ -5,6 +5,7 @@ env:
     - MATRIX_EVAL="CC=gcc-8 CXX=g++-8"
     - VCPKG_DEFAULT_TRIPLET=x64-linux
     - VCPKG_TARGET_TRIPLET=x64-linux
+    - CMAKE_TOOLCHAIN_FILE=${HOME}/vckpg/scripts/buildsystems/vcpkg.cmake
 
 addons:
   apt:
