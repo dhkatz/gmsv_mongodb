@@ -1,10 +1,5 @@
 language: cpp
 
-env:
-  global:
-    - CONFIG=Debug VCPKG_DEFAULT_TRIPLET=x64-linux VCPKG_TARGET_TRIPLET=x64-linux CC_COMPILER=gcc-8 CXX_COMPILER=g++-8
-    - CONFIG=Release VCPKG_DEFAULT_TRIPLET=x64-linux VCPKG_TARGET_TRIPLET=x64-linux
-
 matrix:
   include:
     - os: linux
@@ -16,7 +11,8 @@ matrix:
           packages:
             - g++-8
       env:
-        - MATRIX_EVAL="CC=gcc-8 CXX=g++-8"
+        - MATRIX_EVAL="CC=gcc-8 CXX=g++-8" CONFIG=Release VCPKG_DEFAULT_TRIPLET=x64-linux VCPKG_TARGET_TRIPLET=x64-linux
+        - MATRIX_EVAL="CC=gcc-8 CXX=g++-8" CONFIG=Debug VCPKG_DEFAULT_TRIPLET=x64-linux VCPKG_TARGET_TRIPLET=x64-linux CC_COMPILER=gcc-8 CXX_COMPILER=g++-8
 
 before_install:
   - eval "${MATRIX_EVAL}"
@@ -30,18 +26,16 @@ before_install:
 install:
   - mkdir -p ${HOME}/vcpkg
 
-  - |
-    set -e
-    pushd ${HOME}/vcpkg
-    git init
-    git remote add origin https://github.com/Microsoft/vcpkg.git
-    git fetch origin master
-    git checkout -b master origin/master
-    ./bootstrap-vcpkg.sh
-    echo -e '\nset(VCPKG_BUILD_TYPE release)' >> ./triplets/${VCPKG_TRIPLET}.cmake
-    ./vcpkg install mongo-c-driver
-    ./vcpkg integrate install
-    popd
+  - set -e
+  - pushd ${HOME}/vcpkg
+  - git init
+  - git remote add origin https://github.com/Microsoft/vcpkg.git
+  - git fetch origin master
+  - git checkout -b master origin/master
+  - ./bootstrap-vcpkg.sh
+  - ./vcpkg install mongo-c-driver
+  - ./vcpkg integrate install
+  - popd
 
 script:
   - set -e
