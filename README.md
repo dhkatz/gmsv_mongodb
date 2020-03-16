@@ -8,7 +8,7 @@ A MongoDB module for Garry's Mod!
 
 ## Quickstart
 
-Download a pre-built binary for your system from the **Releases** section.
+Download a pre-built binary for your system from the [Releases](https://github.com/dhkatz/gmsv_mongodb/releases) section.
 
 Place the `.dll` in `garrysmod/lua/bin`.
 
