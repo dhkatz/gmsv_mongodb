@@ -30,11 +30,15 @@ build_script:
 cache:
   - C:\Tools\vcpkg\installed\ -> .appveyor.yml
 
+artifacts:
+  - path: 'build\**\*.dll'
+    name: module
+
 deploy:
   provider: GitHub
   auth_token:
     secure: "6ANSF4rQ1yS9HzPb7K7lA4IjP6NqWf2XPIPnp/SuYGIe61D9Ur9fIAaGQxwWbhWw"
-  artifact: build\**\*.dll
+  artifact: module
   draft: true
   on:
     APPVEYOR_REPO_TAG: true
