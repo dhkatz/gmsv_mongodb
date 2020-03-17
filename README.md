@@ -8,6 +8,19 @@ A MongoDB module for Garry's Mod!
 
 ## Quickstart
 
+### Information
+
+Why does Garry's Mod need a MongoDB module? Because MongoDB is a NoSQL database.
+MySQL is designed for static schemas and performs best with complex queries.
+
+Typically, the data stored by Garry's Mod servers is extremely dynamic 
+and the queries performed are very simple. This makes MySQL a pain.
+
+With MongoDB you don't have to worry about schemas at all! Just write
+and query whatever data you want!
+
+### Download
+
 Download a pre-built binary for your system from the [Releases](https://github.com/dhkatz/gmsv_mongodb/releases) section.
 
 Place the `.dll` in `garrysmod/lua/bin`.
