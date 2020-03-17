@@ -9,11 +9,11 @@ const char* LuaToJSON(GarrysMod::Lua::ILuaBase* LUA, int ref) {
     LUA->ReferencePush(ref);
 
     if (LUA->PCall(1, 1, 0) != 0) {
-        throw std::exception(LUA->GetString(-1));
+        throw std::runtime_error(LUA->GetString(-1));
     }
 
     if (!LUA->IsType(-1, GarrysMod::Lua::Type::String)) {
-        throw std::exception("Invalid table passed to MongoDB!");
+        throw std::runtime_error("Invalid table passed to MongoDB!");
     }
 
     auto json = LUA->GetString(-1);
@@ -30,7 +30,7 @@ bson_t* LuaToBSON(GarrysMod::Lua::ILuaBase* LUA, int ref) {
     bson_error_t error;
     auto bson = bson_new_from_json((const uint8_t*)json, -1,  &error);
     if (error.code != 0) {
-        throw std::exception(error.message);
+        throw std::runtime_error(error.message);
     }
 
     return bson;

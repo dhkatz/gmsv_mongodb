@@ -21,7 +21,7 @@ LUA_FUNCTION(collection_command) {
     bson_t* command;
     try {
         command = LuaToBSON(LUA, commandRef);
-    } catch (std::exception& e) {
+    } catch (std::runtime_error& e) {
         LUA->ReferenceFree(commandRef);
         LUA->ThrowError(e.what());
         return 0;
@@ -78,7 +78,7 @@ LUA_FUNCTION(collection_count) {
     bson_t* query;
     try {
         query = LuaToBSON(LUA, queryRef);
-    } catch (std::exception& e) {
+    } catch (std::runtime_error& e) {
         if (optsRef != INT_MIN) LUA->ReferenceFree(optsRef);
         LUA->ReferenceFree(queryRef);
         LUA->ThrowError(e.what());
@@ -91,7 +91,7 @@ LUA_FUNCTION(collection_count) {
     if (optsRef != INT_MIN) {
         try {
             opts = LuaToBSON(LUA, optsRef);
-        } catch (std::exception& e)  {
+        } catch (std::runtime_error& e)  {
             LUA->ReferenceFree(optsRef);
             LUA->ThrowError(e.what());
         }
@@ -139,7 +139,7 @@ LUA_FUNCTION(collection_find) {
     bson_t* query;
     try {
         query = LuaToBSON(LUA, queryRef);
-    } catch (std::exception& e) {
+    } catch (std::runtime_error& e) {
         if (optsRef != INT_MIN) LUA->ReferenceFree(optsRef);
         LUA->ReferenceFree(queryRef);
         LUA->ThrowError(e.what());
@@ -151,7 +151,7 @@ LUA_FUNCTION(collection_find) {
     if (optsRef != INT_MIN) {
         try {
             opts = LuaToBSON(LUA, optsRef);
-        } catch (std::exception& e)  {
+        } catch (std::runtime_error& e)  {
             LUA->ReferenceFree(optsRef);
             LUA->ThrowError(e.what());
         }
@@ -207,7 +207,7 @@ LUA_FUNCTION(collection_find_one) {
     bson_t* query;
     try {
         query = LuaToBSON(LUA, queryRef);
-    } catch (std::exception& e) {
+    } catch (std::runtime_error& e) {
         if (optsRef != INT_MIN) LUA->ReferenceFree(optsRef);
         LUA->ReferenceFree(queryRef);
         LUA->ThrowError(e.what());
@@ -218,7 +218,7 @@ LUA_FUNCTION(collection_find_one) {
     if (optsRef != INT_MIN) {
         try {
             options = LuaToBSON(LUA, optsRef);
-        } catch (std::exception& e)  {
+        } catch (std::runtime_error& e)  {
             LUA->ReferenceFree(optsRef);
             LUA->ThrowError(e.what());
         }
@@ -261,7 +261,7 @@ LUA_FUNCTION(collection_insert) {
     bson_t* doc;
     try {
         doc = LuaToBSON(LUA, docRef);
-    } catch (std::exception& e) {
+    } catch (std::runtime_error& e) {
         LUA->ReferenceFree(docRef);
         LUA->ThrowError(e.what());
         return 0;
@@ -312,7 +312,7 @@ LUA_FUNCTION(collection_update) {
     try {
         selector = LuaToBSON(LUA, selRef);
         update = LuaToBSON(LUA, updRef);
-    } catch (std::exception& e) {
+    } catch (std::runtime_error& e) {
         LUA->ReferenceFree(selRef);
         LUA->ReferenceFree(updRef);
         LUA->ThrowError(e.what());
@@ -346,7 +346,7 @@ LUA_FUNCTION(collection_bulk) {
         auto optsRef = LUA->ReferenceCreate();
         try {
             opts = LuaToBSON(LUA, optsRef);
-        } catch (std::exception& e) {
+        } catch (std::runtime_error& e) {
             LUA->ReferenceFree(optsRef);
             LUA->ThrowError(e.what());
             return 0;

@@ -1,6 +1,8 @@
 #ifndef GMSV_MONGODB_MONGODB_HPP
 #define GMSV_MONGODB_MONGODB_HPP
 
+#include <stdexcept>
+
 #include <mongoc/mongoc.h>
 
 #include <GarrysMod/Lua/Interface.h>

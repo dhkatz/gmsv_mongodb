@@ -52,7 +52,7 @@ LUA_FUNCTION(bulk_insert) {
     bson_t* query;
     try {
         query = LuaToBSON(LUA, queryRef);
-    } catch (std::exception& e) {
+    } catch (std::runtime_error& e) {
         if (optsRef != INT_MIN) LUA->ReferenceFree(optsRef);
         LUA->ReferenceFree(queryRef);
         LUA->ThrowError(e.what());
@@ -65,7 +65,7 @@ LUA_FUNCTION(bulk_insert) {
     if (optsRef != INT_MIN) {
         try {
             opts = LuaToBSON(LUA, optsRef);
-        } catch (std::exception& e)  {
+        } catch (std::runtime_error& e)  {
             LUA->ReferenceFree(optsRef);
             LUA->ThrowError(e.what());
         }
