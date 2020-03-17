@@ -15,13 +15,13 @@ LUA_FUNCTION(destroy_collection) {
 LUA_FUNCTION(collection_command) {
     CHECK_COLLECTION()
 
-    BUILD_QUERY()
+    CHECK_BSON(command, opts)
 
     bson_t reply;
     bson_error_t error;
-    bool success = mongoc_collection_command_with_opts(collection, query, nullptr, opts, &reply, &error);
+    bool success = mongoc_collection_command_with_opts(collection, command, nullptr, opts, &reply, &error);
 
-    CLEANUP_QUERY()
+    CLEANUP_BSON(command, opts)
 
     if (!success) {
         bson_destroy(&reply);
@@ -46,12 +46,12 @@ LUA_FUNCTION(collection_name) {
 LUA_FUNCTION(collection_count) {
     CHECK_COLLECTION()
 
-    BUILD_QUERY()
+    CHECK_BSON(filter, opts)
 
     bson_error_t error;
-    int64_t count = mongoc_collection_count_documents(collection, query, opts, nullptr, nullptr, &error);
+    int64_t count = mongoc_collection_count_documents(collection, filter, opts, nullptr, nullptr, &error);
 
-    CLEANUP_QUERY()
+    CLEANUP_BSON(filter, opts)
 
     if (count == -1) {
         LUA->ThrowError(error.message);
@@ -66,11 +66,11 @@ LUA_FUNCTION(collection_count) {
 LUA_FUNCTION(collection_find) {
     CHECK_COLLECTION()
 
-    BUILD_QUERY()
+    CHECK_BSON(filter, opts)
 
-    auto cursor = mongoc_collection_find_with_opts(collection, query, opts, mongoc_read_prefs_new(MONGOC_READ_PRIMARY));
+    auto cursor = mongoc_collection_find_with_opts(collection, filter, opts, mongoc_read_prefs_new(MONGOC_READ_PRIMARY));
 
-    CLEANUP_QUERY()
+    CLEANUP_BSON(filter, opts)
 
     LUA->CreateTable();
 
@@ -93,7 +93,7 @@ LUA_FUNCTION(collection_find) {
 LUA_FUNCTION(collection_find_one) {
     CHECK_COLLECTION()
 
-    BUILD_QUERY()
+    CHECK_BSON(filter, opts)
 
     bson_t options;
     bson_init(&options);
@@ -102,9 +102,9 @@ LUA_FUNCTION(collection_find_one) {
     BSON_APPEND_INT32(&options, "limit", 1 );
     BSON_APPEND_BOOL(&options, "singleBatch", true);
 
-    auto cursor = mongoc_collection_find_with_opts(collection, query, &options, mongoc_read_prefs_new(MONGOC_READ_PRIMARY));
+    auto cursor = mongoc_collection_find_with_opts(collection, filter, &options, mongoc_read_prefs_new(MONGOC_READ_PRIMARY));
 
-    CLEANUP_QUERY()
+    CLEANUP_BSON(filter, opts)
 
     LUA->CreateTable();
 
@@ -120,11 +120,11 @@ LUA_FUNCTION(collection_find_one) {
 LUA_FUNCTION(collection_insert) {
     CHECK_COLLECTION()
 
-    BUILD_QUERY()
+    CHECK_BSON(document)
 
-    bool success = mongoc_collection_insert(collection, MONGOC_INSERT_NONE, query, nullptr, nullptr);
+    bool success = mongoc_collection_insert(collection, MONGOC_INSERT_NONE, document, nullptr, nullptr);
 
-    CLEANUP_QUERY()
+    CLEANUP_BSON(document)
 
     LUA->PushBool(success);
 
@@ -134,11 +134,11 @@ LUA_FUNCTION(collection_insert) {
 LUA_FUNCTION(collection_remove) {
     CHECK_COLLECTION()
 
-    BUILD_QUERY()
+    CHECK_BSON(selector)
 
-    bool success = mongoc_collection_remove(collection, MONGOC_REMOVE_NONE, query, nullptr, nullptr);
+    bool success = mongoc_collection_remove(collection, MONGOC_REMOVE_NONE, selector, nullptr, nullptr);
 
-    CLEANUP_QUERY()
+    CLEANUP_BSON(selector)
 
     LUA->PushBool(success);
 
@@ -151,12 +151,12 @@ LUA_FUNCTION(collection_update) {
     LUA->CheckType(2, GarrysMod::Lua::Type::Table);
     LUA->CheckType(3, GarrysMod::Lua::Type::Table);
 
-    BUILD_QUERY()
+    CHECK_BSON(selector, update)
 
     bson_error_t error;
-    bool success = mongoc_collection_update(collection, MONGOC_UPDATE_MULTI_UPDATE, query, opts, nullptr, &error);
+    bool success = mongoc_collection_update(collection, MONGOC_UPDATE_MULTI_UPDATE, selector, update, nullptr, &error);
 
-    CLEANUP_QUERY()
+    CLEANUP_BSON(selector, update)
 
     if (!success) {
         LUA->ThrowError(error.message);
@@ -171,11 +171,11 @@ LUA_FUNCTION(collection_update) {
 LUA_FUNCTION(collection_bulk) {
     CHECK_COLLECTION()
 
-    BUILD_QUERY()
+    CHECK_BSON(opts)
 
-    auto bulk = mongoc_collection_create_bulk_operation_with_opts(collection, query);
+    auto bulk = mongoc_collection_create_bulk_operation_with_opts(collection, opts);
 
-    CLEANUP_QUERY()
+    CLEANUP_BSON(opts)
 
     LUA->PushUserType(bulk, BulkMetaTableId);
 

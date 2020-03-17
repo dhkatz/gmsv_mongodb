@@ -31,12 +31,12 @@ LUA_FUNCTION(bulk_execute) {
 LUA_FUNCTION(bulk_insert) {
     CHECK_BULK()
 
-    BUILD_QUERY()
+    CHECK_BSON(query, opts)
 
     bson_error_t error;
     bool success = mongoc_bulk_operation_insert_with_opts(bulk, query, opts, &error);
 
-    CLEANUP_QUERY()
+    CLEANUP_BSON(query, opts)
 
     if (!success) {
         LUA->ThrowError(error.message);
@@ -49,12 +49,12 @@ LUA_FUNCTION(bulk_insert) {
 LUA_FUNCTION(bulk_remove) {
     CHECK_BULK()
 
-    BUILD_QUERY()
+    CHECK_BSON(query, opts)
 
     bson_error_t error;
     bool success = mongoc_bulk_operation_remove_one_with_opts(bulk, query, opts, &error);
 
-    CLEANUP_QUERY()
+    CLEANUP_BSON(query, opts)
 
     if (!success) {
         LUA->ThrowError(error.message);
@@ -70,12 +70,12 @@ LUA_FUNCTION(bulk_update) {
     LUA->CheckType(2, GarrysMod::Lua::Type::Table);
     LUA->CheckType(3, GarrysMod::Lua::Type::Table);
 
-    BUILD_QUERY()
+    CHECK_BSON(selector, document, opts)
 
     bson_error_t error;
-    bool success = mongoc_bulk_operation_update_one_with_opts(bulk, query, opts, nullptr, &error);
+    bool success = mongoc_bulk_operation_update_one_with_opts(bulk, selector, document, opts, &error);
 
-    CLEANUP_QUERY()
+    CLEANUP_BSON(selector, document, opts)
 
     if (!success) {
         LUA->ThrowError(error.message);
@@ -92,12 +92,12 @@ LUA_FUNCTION(bulk_replace) {
     LUA->CheckType(2, GarrysMod::Lua::Type::Table);
     LUA->CheckType(3, GarrysMod::Lua::Type::Table);
 
-    BUILD_QUERY()
+    CHECK_BSON(selector, document, opts)
 
     bson_error_t error;
-    bool success = mongoc_bulk_operation_replace_one_with_opts(bulk, query, opts, nullptr, &error);
+    bool success = mongoc_bulk_operation_replace_one_with_opts(bulk, selector, document, opts, &error);
 
-    CLEANUP_QUERY()
+    CLEANUP_BSON(selector, document, opts)
 
     if (!success) {
         LUA->ThrowError(error.message);
