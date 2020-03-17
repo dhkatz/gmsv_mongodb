@@ -1,9 +1,11 @@
 #include "Bulk.hpp"
 
-LUA_FUNCTION(destroy_bulk) {
-    auto bulk = LUA->GetUserType<mongoc_bulk_operation_t>(1, BulkMetaTableId);
-
+#define CHECK_BULK() \
+    auto bulk = LUA->GetUserType<mongoc_bulk_operation_t>(1, BulkMetaTableId); \
     if (bulk == nullptr) return 0;
+
+LUA_FUNCTION(destroy_bulk) {
+    CHECK_BULK()
 
     mongoc_bulk_operation_destroy(bulk);
 
@@ -11,9 +13,7 @@ LUA_FUNCTION(destroy_bulk) {
 }
 
 LUA_FUNCTION(bulk_execute) {
-    auto bulk = LUA->GetUserType<mongoc_bulk_operation_t>(1, BulkMetaTableId);
-
-    if (bulk == nullptr) return 0;
+    CHECK_BULK()
 
     bson_t reply;
     bson_error_t error;
@@ -29,55 +29,14 @@ LUA_FUNCTION(bulk_execute) {
 }
 
 LUA_FUNCTION(bulk_insert) {
-    auto bulk = LUA->GetUserType<mongoc_bulk_operation_t>(1, BulkMetaTableId);
+    CHECK_BULK()
 
-    if (bulk == nullptr) return 0;
+    BUILD_QUERY()
 
-    int queryRef = INT_MIN, optsRef = INT_MIN;
-
-    if (LUA->Top() == 3) {
-        LUA->CheckType(2, GarrysMod::Lua::Type::Table);
-        LUA->CheckType(3, GarrysMod::Lua::Type::Table);
-        optsRef = LUA->ReferenceCreate();
-        queryRef = LUA->ReferenceCreate();
-    } else if (LUA->Top() == 2) {
-        LUA->CheckType(2, GarrysMod::Lua::Type::Table);
-        queryRef = LUA->ReferenceCreate();
-    } else {
-        LUA->ThrowError("Received incorrect number of arguments!");
-
-        return 0;
-    }
-
-    bson_t* query;
-    try {
-        query = LuaToBSON(LUA, queryRef);
-    } catch (std::runtime_error& e) {
-        if (optsRef != INT_MIN) LUA->ReferenceFree(optsRef);
-        LUA->ReferenceFree(queryRef);
-        LUA->ThrowError(e.what());
-    }
-
-    bson_t * opts;
     bson_error_t error;
-    bool success;
+    bool success = mongoc_bulk_operation_insert_with_opts(bulk, query, opts, &error);
 
-    if (optsRef != INT_MIN) {
-        try {
-            opts = LuaToBSON(LUA, optsRef);
-        } catch (std::runtime_error& e)  {
-            LUA->ReferenceFree(optsRef);
-            LUA->ThrowError(e.what());
-        }
-        success = mongoc_bulk_operation_insert_with_opts(bulk, query, opts, &error);
-    } else {
-        success = mongoc_bulk_operation_insert_with_opts(bulk, query, nullptr, &error);
-    }
-
-    bson_destroy(query);
-    if (optsRef != INT_MIN) {
-        bson_destroy(opts);
-    }
+    CLEANUP_QUERY()
 
     if (!success) {
         LUA->ThrowError(error.message);
@@ -88,17 +47,62 @@ LUA_FUNCTION(bulk_insert) {
 }
 
 LUA_FUNCTION(bulk_remove) {
+    CHECK_BULK()
+
+    BUILD_QUERY()
+
+    bson_error_t error;
+    bool success = mongoc_bulk_operation_remove_one_with_opts(bulk, query, opts, &error);
+
+    CLEANUP_QUERY()
+
+    if (!success) {
+        LUA->ThrowError(error.message);
+        return 0;
+    }
 
     return 1;
 }
 
 LUA_FUNCTION(bulk_update) {
+    CHECK_BULK()
+
+    LUA->CheckType(2, GarrysMod::Lua::Type::Table);
+    LUA->CheckType(3, GarrysMod::Lua::Type::Table);
+
+    BUILD_QUERY()
+
+    bson_error_t error;
+    bool success = mongoc_bulk_operation_update_one_with_opts(bulk, query, opts, nullptr, &error);
+
+    CLEANUP_QUERY()
+
+    if (!success) {
+        LUA->ThrowError(error.message);
+        return 0;
+    }
 
     return 1;
 }
 
 
 LUA_FUNCTION(bulk_replace) {
+    CHECK_BULK()
+
+    LUA->CheckType(2, GarrysMod::Lua::Type::Table);
+    LUA->CheckType(3, GarrysMod::Lua::Type::Table);
+
+    BUILD_QUERY()
+
+    bson_error_t error;
+    bool success = mongoc_bulk_operation_replace_one_with_opts(bulk, query, opts, nullptr, &error);
+
+    CLEANUP_QUERY()
+
+    if (!success) {
+        LUA->ThrowError(error.message);
+        return 0;
+    }
 
     return 1;
 }

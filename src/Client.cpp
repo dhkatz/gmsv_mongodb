@@ -1,5 +1,9 @@
 #include "Client.hpp"
 
+#define CHECK_CLIENT() \
+    auto client = LUA->GetUserType<mongoc_client_t>(1, ClientMetaTableId); \
+    if (client == nullptr) return 0;
+
 /**
  * Create a new MongoDB C client.
  * @param LUA Lua state
@@ -36,9 +40,7 @@ LUA_FUNCTION(new_client) {
  * @return
  */
 LUA_FUNCTION(destroy_client) {
-    auto client = LUA->GetUserType<mongoc_client_t>(1, ClientMetaTableId);
-
-    if (client == nullptr) return 0;
+    CHECK_CLIENT()
 
     mongoc_client_destroy(client);
 
@@ -51,9 +53,7 @@ LUA_FUNCTION(destroy_client) {
  * @return
  */
 LUA_FUNCTION(client_command) {
-    auto client = LUA->GetUserType<mongoc_client_t>(1, ClientMetaTableId);
-
-    if (client == nullptr) return 0;
+    CHECK_CLIENT()
 
     auto database = LUA->CheckString(2);
     LUA->CheckType(3, GarrysMod::Lua::Type::Table);
@@ -85,9 +85,7 @@ LUA_FUNCTION(client_command) {
  * @return
  */
 LUA_FUNCTION(client_uri) {
-    auto client = LUA->GetUserType<mongoc_client_t>(1, ClientMetaTableId);
-
-    if (client == nullptr) return 0;
+    CHECK_CLIENT()
 
     auto uri = mongoc_client_get_uri(client);
 
@@ -97,9 +95,7 @@ LUA_FUNCTION(client_uri) {
 }
 
 LUA_FUNCTION(client_default_database) {
-    auto client = LUA->GetUserType<mongoc_client_t>(1, ClientMetaTableId);
-
-    if (client == nullptr) return 0;
+    CHECK_CLIENT()
 
     auto database = mongoc_client_get_default_database(client);
 
@@ -115,9 +111,7 @@ LUA_FUNCTION(client_default_database) {
  * @return
  */
 LUA_FUNCTION(client_list_databases) {
-    auto client = LUA->GetUserType<mongoc_client_t>(1, ClientMetaTableId);
-
-    if (client == nullptr) return 0;
+    CHECK_CLIENT()
 
     auto cursor = mongoc_client_find_databases_with_opts(client, nullptr);
 
@@ -147,9 +141,7 @@ LUA_FUNCTION(client_list_databases) {
  * @return
  */
 LUA_FUNCTION(client_database) {
-    auto client = LUA->GetUserType<mongoc_client_t>(1, ClientMetaTableId);
-
-    if (client == nullptr) return 0;
+    CHECK_CLIENT()
 
     auto database = LUA->CheckString(2);
     auto db = mongoc_client_get_database(client, database);
@@ -172,9 +164,7 @@ LUA_FUNCTION(client_database) {
  * @return
  */
 LUA_FUNCTION(client_collection) {
-    auto client = LUA->GetUserType<mongoc_client_t>(1, ClientMetaTableId);
-
-    if (client == nullptr) return 0;
+    CHECK_CLIENT()
 
     auto database = LUA->CheckString(2);
     auto name = LUA->CheckString(3);
