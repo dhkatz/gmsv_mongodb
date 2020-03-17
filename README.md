@@ -22,14 +22,27 @@ require('mongodb')
 -- Note: Connecting to the MongoDB cluster can hang! Cache the result in a global!
 client = client or mongodb('<CONNECTION_URI>', '<APP_NAME>')
 
+-- Retrieve databases
 local database = client:Database('test')
 
+-- Retrieve collections
 local players = database:GetCollection('players')
 
-local data = players:Find({ name = 'Bob' })
+-- Run queries (Find, Insert, Update, Remove)
+local data = players:Find({ name = 'Bob', age = 25 })
 
-print(data[0].name)
+print(data[1].name)
 
+players:Update({ name = 'Bob' }, { ['$set'] = { age = 26 } })  
+
+-- Execute bulk queries
+local bulk = players:Bulk()
+
+for i, ply in ipairs({ 'Bob', 'Jim', 'Ann' }) do
+    bulk:Insert({ name = ply, age = 20 + i })
+end 
+
+local result = bulk:Execute()
 ```
 
 ## License

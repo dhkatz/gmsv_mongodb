@@ -96,6 +96,18 @@ LUA_FUNCTION(client_uri) {
     return 1;
 }
 
+LUA_FUNCTION(client_default_database) {
+    auto client = LUA->GetUserType<mongoc_client_t>(1, ClientMetaTableId);
+
+    if (client == nullptr) return 0;
+
+    auto database = mongoc_client_get_default_database(client);
+
+    LUA->PushUserType(database, DatabaseMetaTableId);
+
+    return 1;
+}
+
 /**
  * Get a list of the MongoDB databases.
  * @see client_database
@@ -117,7 +129,7 @@ LUA_FUNCTION(client_list_databases) {
 
     for (int i = 0; mongoc_cursor_next(cursor, &bson); ++i) {
         LUA->ReferencePush(table);
-            LUA->PushNumber(i);
+            LUA->PushNumber(i + 1);
             LUA->ReferencePush(BSONToLua(LUA, bson));
         LUA->SetTable(-3);
     }

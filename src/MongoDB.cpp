@@ -1,6 +1,6 @@
 #include "MongoDB.hpp"
 
-int ClientMetaTableId, DatabaseMetaTableId, CollectionMetaTableId;
+int ClientMetaTableId, DatabaseMetaTableId, CollectionMetaTableId, BulkMetaTableId;
 
 GMOD_MODULE_OPEN() {
     mongoc_init();
@@ -21,6 +21,9 @@ GMOD_MODULE_OPEN() {
 
         LUA->PushCFunction(client_list_databases);
         LUA->SetField(-2, "DatabaseList");
+
+        LUA->PushCFunction(client_default_database);
+        LUA->SetField(-2, "DefaultDatabase");
 
         LUA->PushCFunction(client_database);
         LUA->SetField(-2, "Database");
@@ -78,8 +81,17 @@ GMOD_MODULE_OPEN() {
         LUA->PushCFunction(collection_command);
         LUA->SetField(-2, "Command");
 
+        LUA->PushCFunction(collection_name);
+        LUA->SetField(-2, "Name");
+
+        LUA->PushCFunction(collection_count);
+        LUA->SetField(-2, "Count");
+
         LUA->PushCFunction(collection_find);
         LUA->SetField(-2, "Find");
+
+        LUA->PushCFunction(collection_find_one);
+        LUA->SetField(-2, "FindOne");
 
         LUA->PushCFunction(collection_insert);
         LUA->SetField(-2, "Insert");
@@ -89,6 +101,25 @@ GMOD_MODULE_OPEN() {
 
         LUA->PushCFunction(collection_remove);
         LUA->SetField(-2, "Remove");
+
+        LUA->PushCFunction(collection_bulk);
+        LUA->SetField(-2, "Bulk");
+
+    LUA->Pop();
+
+    BulkMetaTableId = LUA->CreateMetaTable("MongoDBBulk");
+
+        LUA->Push(-1);
+        LUA->SetField(-2, "__index");
+
+        LUA->PushCFunction(destroy_bulk);
+        LUA->SetField(-2, "__gc");
+
+        LUA->PushCFunction(bulk_execute);
+        LUA->SetField(-2, "Execute");
+
+        LUA->PushCFunction(bulk_insert);
+        LUA->SetField(-2, "Insert");
 
     LUA->Pop();
 

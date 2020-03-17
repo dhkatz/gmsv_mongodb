@@ -10,5 +10,6 @@
 #include "Client.hpp"
 #include "Database.hpp"
 #include "Collection.hpp"
+#include "Bulk.hpp"
 
 #endif //GMSV_MONGODB_MONGODB_HPP

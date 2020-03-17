@@ -26,4 +26,12 @@ print(client:Uri())
 
 Executes the passed command on the given database and returns the result.
 
+### `table Client:DatabaseList()`
 
+#### Description
+
+Return a list of databases the client has access to.
+
+### `Database Database(string name)`
+
+Get a specific [Database](Database.md) instance.

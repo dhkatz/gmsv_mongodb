@@ -13,7 +13,7 @@ add_library(mongodb SHARED
         MongoDB.hpp
         Collection.cpp
         Collection.hpp
-        )
+        Bulk.cpp Bulk.hpp)
 
 target_compile_definitions(mongodb PRIVATE ${MONGOC_STATIC_DEFINITIONS})
 
