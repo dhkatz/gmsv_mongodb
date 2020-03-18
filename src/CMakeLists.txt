@@ -17,10 +17,6 @@ add_library(mongodb SHARED
 
 target_compile_definitions(mongodb PRIVATE ${MONGOC_STATIC_DEFINITIONS})
 
-target_compile_options(mongodb PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4091>
-)
-
 target_include_directories(mongodb PRIVATE ${MONGOC_STATIC_INCLUDE_DIRS})
 
 if(${WIN32})

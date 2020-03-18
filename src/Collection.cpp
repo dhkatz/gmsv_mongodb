@@ -17,13 +17,13 @@ LUA_FUNCTION(collection_command) {
 
     CHECK_BSON(command, opts)
 
-    SETUP_QUERY(reply)
+    SETUP_QUERY(error, reply)
 
     bool success = mongoc_collection_command_with_opts(collection, command, nullptr, opts, &reply, &error);
 
     CLEANUP_BSON(command, opts)
 
-    CLEANUP_QUERY(reply, !success)
+    CLEANUP_QUERY(error, reply, !success)
 
     LUA->ReferencePush(BSONToLua(LUA, &reply));
 
@@ -43,15 +43,15 @@ LUA_FUNCTION(collection_count) {
 
     CHECK_BSON(filter, opts)
 
-    SETUP_QUERY()
+    SETUP_QUERY(error)
 
     int64_t count = mongoc_collection_count_documents(collection, filter, opts, nullptr, nullptr, &error);
 
     CLEANUP_BSON(filter, opts)
 
-    CLEANUP_QUERY(count == -1)
+    CLEANUP_QUERY(error, count == -1)
 
-    LUA->PushNumber(count);
+    LUA->PushNumber((double)count);
 
     return 1;
 }
@@ -115,13 +115,13 @@ LUA_FUNCTION(collection_insert) {
 
     CHECK_BSON(document)
 
-    SETUP_QUERY()
+    SETUP_QUERY(error)
 
     bool success = mongoc_collection_insert(collection, MONGOC_INSERT_NONE, document, nullptr, &error);
 
     CLEANUP_BSON(document)
 
-    CLEANUP_QUERY(!success)
+    CLEANUP_QUERY(error, !success)
 
     LUA->PushBool(success);
 
@@ -133,13 +133,13 @@ LUA_FUNCTION(collection_remove) {
 
     CHECK_BSON(selector)
 
-    SETUP_QUERY()
+    SETUP_QUERY(error)
 
     bool success = mongoc_collection_remove(collection, MONGOC_REMOVE_NONE, selector, nullptr, &error);
 
     CLEANUP_BSON(selector)
 
-    CLEANUP_QUERY(!success)
+    CLEANUP_QUERY(error, !success)
 
     LUA->PushBool(success);
 
@@ -154,13 +154,13 @@ LUA_FUNCTION(collection_update) {
 
     CHECK_BSON(selector, update)
 
-    SETUP_QUERY()
+    SETUP_QUERY(error)
 
     bool success = mongoc_collection_update(collection, MONGOC_UPDATE_MULTI_UPDATE, selector, update, nullptr, &error);
 
     CLEANUP_BSON(selector, update)
 
-    CLEANUP_QUERY(!success)
+    CLEANUP_QUERY(error, !success)
 
     LUA->PushBool(success);
 

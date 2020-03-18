@@ -23,7 +23,6 @@ matrix:
     - os: linux
       env: CONFIG=Release
 
-
 before_install:
   - eval "${MATRIX_EVAL}"
   - mkdir $HOME/usr
@@ -57,7 +56,7 @@ script:
 
 cache:
   directories:
-    - ${HOME}/vcpkg/installed
+    - ${HOME}/vcpkg/
 
 deploy:
   provider: releases

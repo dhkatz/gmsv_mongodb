@@ -125,14 +125,14 @@
 
 #define SETUP_QUERY(...) EXPAND(VA_MACRO( SETUP_QUERY, void, void, __VA_ARGS__ ))
 
-#define SETUP_QUERY0(s, t) bson_error_t error;
+#define SETUP_QUERY1(s, t, VAR1) bson_error_t VAR1;
 
-#define SETUP_QUERY1(s, t, VAR1) bson_error_t error; bson_t VAR1;
+#define SETUP_QUERY2(s, t, VAR1, VAR2) bson_error_t VAR1; bson_t VAR2;
 
 #define CLEANUP_QUERY(...) EXPAND(VA_MACRO( CLEANUP_QUERY, void, void, __VA_ARGS__ ))
 
-#define CLEANUP_QUERY1(s, t, CHECK) if (CHECK) { LUA->ThrowError(error.message); return 0; }
+#define CLEANUP_QUERY2(s, t, VAR1, CHECK) if (CHECK) { LUA->ThrowError(VAR1.message); return 0; }
 
-#define CLEANUP_QUERY2(s, t, VAR1, CHECK) if (CHECK) { bson_destroy(&VAR1); LUA->ThrowError(error.message); return 0; }
+#define CLEANUP_QUERY3(s, t, VAR1, VAR2, CHECK) if (CHECK) { bson_destroy(&VAR2); LUA->ThrowError(VAR1.message); return 0; }
 
 #endif //GMSV_MONGODB_MACROS_HPP
