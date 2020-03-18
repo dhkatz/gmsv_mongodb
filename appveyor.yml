@@ -55,7 +55,7 @@ artifacts:
 deploy:
   provider: GitHub
   auth_token:
-    secure: "6ANSF4rQ1yS9HzPb7K7lA4IjP6NqWf2XPIPnp/SuYGIe61D9Ur9fIAaGQxwWbhWw"
+    secure: "knRWM52k9RrInpuCE5mwYo3+YdPptnKTg7J82JUyMFFD5mw9ZC2LadWsaS4TPJAE"
   artifact: module
   draft: true
   on:
