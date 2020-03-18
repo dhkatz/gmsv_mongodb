@@ -27,7 +27,7 @@ Place the `.dll` in `garrysmod/lua/bin`.
 
 ## Usage
 
-For more details see the [documentation](docs/README.md).
+For more details see the [documentation](docs/README.md) or [examples](examples).
 
 ```lua
 require('mongodb')

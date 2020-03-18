@@ -85,6 +85,11 @@ LUA_FUNCTION(bulk_update) {
     return 1;
 }
 
+LUA_FUNCTION(bulk_update_many) {
+    CHECK_BULK()
+
+    return 1;
+}
 
 LUA_FUNCTION(bulk_replace) {
     CHECK_BULK()

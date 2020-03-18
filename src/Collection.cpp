@@ -17,20 +17,15 @@ LUA_FUNCTION(collection_command) {
 
     CHECK_BSON(command, opts)
 
-    bson_t reply;
-    bson_error_t error;
+    SETUP_QUERY(reply)
+
     bool success = mongoc_collection_command_with_opts(collection, command, nullptr, opts, &reply, &error);
 
     CLEANUP_BSON(command, opts)
 
-    if (!success) {
-        bson_destroy(&reply);
-        LUA->ThrowError(error.message);
-        return 0;
-    }
+    CLEANUP_QUERY(reply, !success)
 
     LUA->ReferencePush(BSONToLua(LUA, &reply));
-    bson_destroy(&reply);
 
     return 1;
 }
@@ -48,15 +43,13 @@ LUA_FUNCTION(collection_count) {
 
     CHECK_BSON(filter, opts)
 
-    bson_error_t error;
+    SETUP_QUERY()
+
     int64_t count = mongoc_collection_count_documents(collection, filter, opts, nullptr, nullptr, &error);
 
     CLEANUP_BSON(filter, opts)
 
-    if (count == -1) {
-        LUA->ThrowError(error.message);
-        return 0;
-    }
+    CLEANUP_QUERY(count == -1)
 
     LUA->PushNumber(count);
 
@@ -122,9 +115,13 @@ LUA_FUNCTION(collection_insert) {
 
     CHECK_BSON(document)
 
-    bool success = mongoc_collection_insert(collection, MONGOC_INSERT_NONE, document, nullptr, nullptr);
+    SETUP_QUERY()
+
+    bool success = mongoc_collection_insert(collection, MONGOC_INSERT_NONE, document, nullptr, &error);
 
     CLEANUP_BSON(document)
+
+    CLEANUP_QUERY(!success)
 
     LUA->PushBool(success);
 
@@ -136,9 +133,13 @@ LUA_FUNCTION(collection_remove) {
 
     CHECK_BSON(selector)
 
-    bool success = mongoc_collection_remove(collection, MONGOC_REMOVE_NONE, selector, nullptr, nullptr);
+    SETUP_QUERY()
+
+    bool success = mongoc_collection_remove(collection, MONGOC_REMOVE_NONE, selector, nullptr, &error);
 
     CLEANUP_BSON(selector)
+
+    CLEANUP_QUERY(!success)
 
     LUA->PushBool(success);
 
@@ -153,15 +154,13 @@ LUA_FUNCTION(collection_update) {
 
     CHECK_BSON(selector, update)
 
-    bson_error_t error;
+    SETUP_QUERY()
+
     bool success = mongoc_collection_update(collection, MONGOC_UPDATE_MULTI_UPDATE, selector, update, nullptr, &error);
 
     CLEANUP_BSON(selector, update)
 
-    if (!success) {
-        LUA->ThrowError(error.message);
-        return 0;
-    }
+    CLEANUP_QUERY(!success)
 
     LUA->PushBool(success);
 
