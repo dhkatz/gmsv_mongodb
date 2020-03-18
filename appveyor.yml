@@ -9,6 +9,7 @@ environment:
   VCPKG_DEFAULT_TRIPLET: x64-windows-static
   VCPKG_TARGET_TRIPLET: x64-windows-static
   CMAKE_TOOLCHAIN_FILE: C:\Tools\vcpkg\scripts\buildsystems\vcpkg.cmake
+  MSVC_VERSION: 64
 
 configuration:
   - Debug
@@ -22,8 +23,10 @@ for:
     environment:
       VCPKG_DEFAULT_TRIPLET: x86-windows-static
       VCPKG_TARGET_TRIPLET: x86-windows-static
-    init:
-      call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars32.bat"
+      MSVC_VERSION: 32
+
+init:
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars%MSVC_VERSION%.bat"
 
 install:
   - vcpkg remove --outdated --recurse

@@ -41,6 +41,7 @@ install:
   - git config remote.origin.url >&- || git remote add origin https://github.com/Microsoft/vcpkg.git
   - git fetch origin master
   - git checkout -b master origin/master
+  - git checkout master 2>/dev/null || git checkout -b master origin/master
   - ./bootstrap-vcpkg.sh
   - ./vcpkg install mongo-c-driver
   - ./vcpkg integrate install
