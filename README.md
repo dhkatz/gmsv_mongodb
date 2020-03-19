@@ -33,7 +33,7 @@ For more details see the [documentation](docs/README.md) or [examples](examples)
 require('mongodb')
 
 -- Note: Connecting to the MongoDB cluster can hang! Cache the result in a global!
-client = client or mongodb('<CONNECTION_URI>', '<APP_NAME>')
+client = client or mongodb.Client('<CONNECTION_URI>', '<APP_NAME>')
 
 -- Retrieve databases
 local database = client:Database('test')

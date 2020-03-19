@@ -1,6 +1,6 @@
 #include "MongoDB.hpp"
 
-int ClientMetaTableId, DatabaseMetaTableId, CollectionMetaTableId, BulkMetaTableId;
+int ClientMetaTableId, DatabaseMetaTableId, CollectionMetaTableId, BulkMetaTableId, ObjectIDMetaTableId;
 
 GMOD_MODULE_OPEN() {
     mongoc_init();
@@ -123,10 +123,33 @@ GMOD_MODULE_OPEN() {
 
     LUA->Pop();
 
+    ObjectIDMetaTableId = LUA->CreateMetaTable("MongoDBObjectID");
+
+        LUA->Push(-1);
+        LUA->SetField(-2, "__index");
+
+        LUA->PushCFunction(objectid_eq);
+        LUA->SetField(-2, "__eq");
+
+        LUA->PushCFunction(objectid_tostring);
+        LUA->SetField(-2, "__tostring");
+
+        LUA->PushCFunction(objectid_data);
+        LUA->SetField(-2, "Data");
+
+        LUA->PushCFunction(objectid_hash);
+        LUA->SetField(-2, "Hash");
+
+    LUA->Pop();
+
     LUA->PushSpecial(GarrysMod::Lua::SPECIAL_GLOB);
-    LUA->PushString("mongodb");
-    LUA->PushCFunction(new_client);
-    LUA->SetTable(-3);
+        LUA->CreateTable();
+            LUA->PushCFunction(new_client);
+            LUA->SetField(-2, "Client");
+            LUA->PushCFunction(new_objectid);
+            LUA->SetField(-2, "ObjectID");
+        LUA->SetField(-2, "mongodb");
+    LUA->Pop();
 
     return 0;
 }

@@ -76,9 +76,8 @@ int BSONToLua(GarrysMod::Lua::ILuaBase* LUA, const bson_t* bson) {
                 }
                 case BSON_TYPE_OID: {
                     const bson_oid_t *oid = bson_iter_oid(&iter);
-                    char str[25];
-                    bson_oid_to_string(oid, str);
-                    LUA->PushString(str);
+
+                    LUA->PushUserType((void *) oid, ObjectIDMetaTableId);
                     break;
                 }
                 case BSON_TYPE_DOCUMENT: {

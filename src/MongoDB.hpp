@@ -9,6 +9,7 @@
 #include <GarrysMod/Lua/Types.h>
 
 #include "Macros.hpp"
+#include "ObjectID.hpp"
 #include "Util.hpp"
 #include "Client.hpp"
 #include "Database.hpp"
