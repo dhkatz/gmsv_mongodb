@@ -2,9 +2,7 @@ language: cpp
 
 env:
   global:
-    - MATRIX_EVAL="CC=gcc-8 CXX=g++-8"
-    - VCPKG_DEFAULT_TRIPLET=x64-linux
-    - VCPKG_TARGET_TRIPLET=x64-linux
+    - MATRIX_EVAL="CC=gcc-7 CXX=g++-7"
     - CMAKE_TOOLCHAIN_FILE=${HOME}/vcpkg/scripts/buildsystems/vcpkg.cmake
 
 addons:
@@ -12,16 +10,22 @@ addons:
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - g++-8
+      - g++-7
+      - gcc-multilib
+      - g++-multilib
 
 dist: xenial
 
 matrix:
   include:
     - os: linux
-      env: CONFIG=Debug
+      env: CONFIG=Debug VCPKG_DEFAULT_TRIPLET=x64-linux VCPKG_TARGET_TRIPLET=x64-linux CMAKE_C_FLAGS=-m64 CMAKE_CXX_FLAGS=-m64
     - os: linux
-      env: CONFIG=Release
+      env: CONFIG=Release VCPKG_DEFAULT_TRIPLET=x64-linux VCPKG_TARGET_TRIPLET=x64-linux CMAKE_C_FLAGS=-m64 CMAKE_CXX_FLAGS=-m64
+    - os: linux
+      env: CONFIG=Debug VCPKG_DEFAULT_TRIPLET=x86-linux VCPKG_TARGET_TRIPLET=x86-linux CMAKE_C_FLAGS=-m32 CMAKE_CXX_FLAGS=-m32
+    - os: linux
+      env: CONFIG=Release VCPKG_DEFAULT_TRIPLET=x86-linux VCPKG_TARGET_TRIPLET=x86-linux CMAKE_C_FLAGS=-m32 CMAKE_CXX_FLAGS=-m32
 
 before_install:
   - eval "${MATRIX_EVAL}"
@@ -42,6 +46,14 @@ install:
   - git fetch origin master
   - git checkout master 2>/dev/null || git checkout -b master origin/master
   - ./bootstrap-vcpkg.sh
+  - |
+    touch ./triplets/community/x86-linux.cmake
+    echo "set(VCPKG_TARGET_ARCHITECTURE x86)" > ./triplets/community/x86-linux.cmake
+    echo "set(VCPKG_CRT_LINKAGE dynamic)" > ./triplets/community/x86-linux.cmake
+    echo "set(VCPKG_LIBRARY_LINKAGE static)" > ./triplets/community/x86-linux.cmake
+    echo "set(VCPKG_CXX_FLAGS -m32)" > ./triplets/community/x86-linux.cmake
+    echo "set(VCPKG_C_FLAGS -m32)" > ./triplets/community/x86-linux.cmake
+    echo "set(VCPKG_CMAKE_SYSTEM_NAME Linux)" > ./triplets/community/x86-linux.cmake
   - ./vcpkg install mongo-c-driver
   - ./vcpkg integrate install
   - popd
@@ -50,7 +62,7 @@ script:
   - set -e
   - mkdir -p build
   - cd build
-  - cmake -DCMAKE_BUILD_TYPE=${CONFIG} -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE} -DVCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET} ..
+  - cmake -DCMAKE_BUILD_TYPE=${CONFIG} -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE} -DVCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET} -DCMAKE_C_FLAGS=${CMAKE_C_FLAGS} -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS} ..
   - make -j
   - cd ..
 

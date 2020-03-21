@@ -4,7 +4,7 @@ A MongoDB module for Garry's Mod!
 
 | Windows | Linux |
 |---------|-------|
-| [![Build status](https://ci.appveyor.com/api/projects/status/8ervbutov5w0144n/branch/development?svg=true)](https://ci.appveyor.com/project/dhkatz/gmsv-mongodb/branch/development)| [![Build Status](https://travis-ci.org/dhkatz/gmsv_mongodb.svg?branch=development)](https://travis-ci.org/dhkatz/gmsv_mongodb) |
+| [![Build status](https://ci.appveyor.com/api/projects/status/8ervbutov5w0144n/branch/development?svg=true)](https://ci.appveyor.com/project/dhkatz/gmsv-mongodb/branch/development)| [![Build Status](https://travis-ci.com/dhkatz/gmsv_mongodb.svg?branch=development)](https://travis-ci.com/dhkatz/gmsv_mongodb) |
 
 ## Quickstart
 
