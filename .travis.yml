@@ -11,8 +11,8 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-7
-      - gcc-multilib
-      - g++-multilib
+      - gcc-7-multilib
+      - g++-7-multilib
 
 dist: xenial
 
