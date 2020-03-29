@@ -7,8 +7,10 @@ local players = client:Collection( 'garrysmod', 'players' )
 
 local bulk = players:Bulk()
 
-for _, ply in ipairs( players.GetAll() ) do
-    bulk:Insert({ _id = ply:SteamID64(), name = ply:Nick() })
+-- Increment the money of every player by 100
+for _, ply in ipairs( player.GetAll() ) do
+    -- See https://docs.mongodb.com/manual/reference/operator/update/ for available update operators
+    bulk:Update( { steamid = ply:SteamID64() }, { ['$inc'] = { money = 100 } } )
 end
 
 bulk:Execute()

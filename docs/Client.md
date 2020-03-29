@@ -32,6 +32,10 @@ Executes the passed command on the given database and returns the result.
 
 Return a list of databases the client has access to.
 
-### `Database Database(string name)`
+### `Database Client:Database(string name)`
 
 Get a specific [Database](Database.md) instance.
+
+### `Collection Client:Collection(string database, string name)`
+
+Get a specific [Collection](Collection.md) instance.

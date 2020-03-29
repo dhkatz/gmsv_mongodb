@@ -8,8 +8,8 @@ packages as it streamlines the process.
 Building `gmsv_mongodb` requires at least GCC 7 if building on Linux
  and CMake 3.13+ on all platforms.
 
-If you are on windows, ensure your default (VCPKG_DEFAULT_TRIPLET) and
- target (VCPKG_TARGET_TRIPLET) triplet are set to static (`x64-windows-static`).
+Ensure `VCPKG_DEFAULT_TRIPLET` and `VCPKG_TARGET_TRIPLET` are set to the proper values
+for your platform.
  
  Follow the instructions for setting up `vcpkg` and then install the Mongo driver
  
@@ -17,7 +17,7 @@ If you are on windows, ensure your default (VCPKG_DEFAULT_TRIPLET) and
  
  Then inside the repo create a build directory and enter it
   
-  `mkdir -p build && cd build`.
+  `mkdir build && cd build`
  
  Then create the CMake project
 
