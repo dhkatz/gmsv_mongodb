@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.13)
 
-find_package(mongo-c-driver CONFIG REQUIRED)
+find_package(libmongoc-1.0 CONFIG REQUIRED)
 
 add_library(mongodb SHARED
         Client.hpp
